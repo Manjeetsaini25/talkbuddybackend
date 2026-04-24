@@ -2,6 +2,8 @@ import express from "express"
 import dotenv from "dotenv"
 import mongoose from "mongoose";
 import userRoute from "./routes/user.route.js";
+import cors from "cors"
+import cookieParser from "cookie-parser";
 
 const app = express()
 
@@ -12,7 +14,9 @@ const app = express()
 // });
 
 // Middle Ware
-app.use(express.json())
+app.use(express.json());
+app.use(cookieParser())
+app.use(cors());
 
 dotenv.config();
 const PORT = process.env.PORT || 3003;
@@ -25,8 +29,16 @@ catch(e){
     console.log(e);
 }
 
+//health
+app.get("/health",(req,res)=>{
+    res.status(200).json({
+        "message":"backend s up and running"
+    })
+})
+
+
 //Routes
-app.use('/user',userRoute);
+app.use('/api/user/',userRoute);
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
